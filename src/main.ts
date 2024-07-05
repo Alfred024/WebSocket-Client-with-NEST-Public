@@ -14,8 +14,13 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <span id="serverStatus_span">OFFLINE</span>
     <br>
 
-    <ul id="unordered_list">
-      <li> Demo </li>
+    <h2> Clientes conectados </h2>
+    <ul id="clients_list">
+    </ul>
+    <br>
+
+    <h2> Lista de mensajes </h2>
+    <ul id="messages_list">
     </ul>
     <br>
 
@@ -31,6 +36,6 @@ const tokenButton = document.querySelector('#token-button')!;
 
 tokenButton.addEventListener('click', ()=>{
   
-  if(tokenInput.value.trim().length <= 0) return alert('Alert, invalid JWT');
+  if(tokenInput.value.trim().length <= 0) return alert('You must input a token to proceed');
   connectToServer(tokenInput.value.trim());
 });

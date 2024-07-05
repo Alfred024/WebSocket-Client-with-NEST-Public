@@ -1,5 +1,7 @@
 import { Manager, Socket } from "socket.io-client";
 
+let socket : Socket;
+
 export default function connectToServer(token : string) {
     const manager = new Manager(
         'http://localhost:3000/socket.io/socket.io.js',
@@ -10,14 +12,18 @@ export default function connectToServer(token : string) {
         }
     );
 
-    const socket = manager.socket('/serverWS');
-    addListeners(socket);
+    if(socket) {
+        socket.removeAllListeners();
+    }
+    socket = manager.socket('/serverWS');
+    addListeners();
 }
 
-function addListeners(socket:Socket) {
+function addListeners() {
     let formMessage = document.querySelector<HTMLFormElement>('#form_message')!;
     let inputMessage = document.querySelector<HTMLInputElement>('#input_message')!;
-    let clientsList = document.querySelector('#unordered_list')!;
+    let clientsList = document.querySelector('#clients_list')!;
+    let messagesList = document.querySelector('#messages_list')!;
 
     socket.on('connect', ()=>{
         let serverStatus_span = document.getElementById('serverStatus_span')!;
@@ -30,6 +36,8 @@ function addListeners(socket:Socket) {
     });
 
     socket.on('clients-updated', (clients : string[])=>{
+        console.log('CLIENTES DEL SERVER');
+        
         console.log(clients);
         
         let listItems = '';
@@ -56,6 +64,6 @@ function addListeners(socket:Socket) {
                 ${message.fullName}: ${message.message}
             </li>
         `;
-        clientsList.appendChild(li);
+        messagesList.appendChild(li);
     });
 }
